@@ -4,7 +4,6 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 var cookieParser = require("cookie-parser");
-var handlebars = require("express-handlebars");
 const cookieSession = require("cookie-session");
 // require("./utils/passport.setup");
 
@@ -12,8 +11,8 @@ const cookieSession = require("cookie-session");
 // const globalErrorHandler = require("./controllers/error.controller");
 
 // const routes = require("./routes");
-// const database = require("./config/database");
-// database.connect();
+const database = require("./config/database");
+database.connect();
 
 const app = express();
 const port = process.env.PORT || 4000;
