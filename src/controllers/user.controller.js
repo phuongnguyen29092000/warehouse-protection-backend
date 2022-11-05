@@ -1,14 +1,14 @@
 const catchAsync = require("../utils/catchAsync");
 const httpStatus = require("http-status");
-const { userService } = require("../services");
+const { userService, tokenService } = require("../services");
 const ApiError = require("../utils/ApiError");
-const { emailBecomeOwner } = require("../config/emailTemplates");
 
 /* create new user */
 const createUser = catchAsync(async (req, res) => {
   const image = req.file ? { photoUrl: req.file.path } : {}
   const createBody = Object.assign(req.body, image);
   const user = await userService.createUser(createBody);
+  const tokens = await tokenService.generateAccessRefreshToken(user?._id.toString());
 
   if(!user) res.status(400).json({
     status: 400,
@@ -17,7 +17,8 @@ const createUser = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).json({
     status: 201,
     message: "Create user successfully",
-    user: user
+    user: user,
+    tokens
   });
 });
 
