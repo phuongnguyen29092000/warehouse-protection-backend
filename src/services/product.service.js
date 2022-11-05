@@ -3,6 +3,8 @@ const { Product } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 const createProduct = async(productBody) => {
+    console.log(productBody);
+
     const product = await Product.create(productBody)
     return product
 }

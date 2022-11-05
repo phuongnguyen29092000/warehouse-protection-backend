@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const continents = require("../config/continents");
 const slug = require("mongoose-slug-generator");
 
 const options = {
@@ -21,15 +20,11 @@ const productSchema = mongoose.Schema(
       maxlength: 1024,
       required: true,
     },
-    imageSlide: [
-      {
-        type: String,
-        required: false,
-        index: true,
-        trim: true,
-        maxlength: 500,
-      },
-    ],
+    imageUrl: {
+      type: String,
+      maxlength: 500,
+      trim: true
+    },
     price: {
       type: Number,
       required: true,
@@ -52,7 +47,7 @@ const productSchema = mongoose.Schema(
     minimumQuantity: {
       type: Number,
       required: true,
-      min: 50,
+      min: 10,
       default: 100,
     },
     discount: {
@@ -61,6 +56,10 @@ const productSchema = mongoose.Schema(
       max: 1,
       default: 0,
     },
+    isSelling: {
+      type: Boolean, 
+      default: true, 
+    },
     subCategory: {
       type: mongoose.Schema.ObjectId,
       ref: "SubCategory",
@@ -68,7 +67,10 @@ const productSchema = mongoose.Schema(
     user: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
-      required: true,
+    },
+    manufacturer : {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
     },
     slug: {
       type: String,

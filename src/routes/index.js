@@ -3,34 +3,31 @@ const express = require("express");
 const userRoute = require("./user.route");
 const categoryRoute = require("./category.route");
 const subCategoryRoute = require("./subcategory.route");
+const productRote = require('./product.route')
 
 const router = express.Router();
 
 const defaultRoutes = [
-  {
-    path: "/admin",
-    route: typePlaceRoute,
-  },
+  // {
+  //   path: "/admin",
+  //   route: '',
+  // },
   {
     path: "/product",
-    route: tourRoute,
+    route: productRote,
   },
   {
     path: "/user",
     route: userRoute,
   },
-  {
-    path: "/order-detail",
-    route: ticketRoute,
-  },
-  {
-    path: "/provider",
-    route: feedbackRoute,
-  },
-  {
-    path: "/auth",
-    route: authRoute,
-  },
+  // {
+  //   path: "/order-detail",
+  //   route: '',
+  // },
+  // {
+  //   path: "/auth",
+  //   route: authRoute,
+  // },
   {
     path: "/sub-category",
     route: subCategoryRoute,

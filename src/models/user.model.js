@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const roles = require("../config/roles");
 const bcrypt = require("bcryptjs");
 
 const userSchema = mongoose.Schema(
@@ -13,10 +12,8 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       required: [true, "Please provide your email"],
-      unique: true,
       lowercase: true,
       trim: true,
-      validate: [validator.isEmail, "Please provide a valid email"],
     },
     photoUrl: {
       type: String,
@@ -34,6 +31,16 @@ const userSchema = mongoose.Schema(
       type: Number,
       min: 0,
       max: 5,
+      default: 0
+    },
+    businessCode : {
+      type: String,
+      require: true,
+      trim: true,
+    },
+    address: {
+      type: String, 
+      require: true
     },
     password: {
       type: String,
@@ -49,7 +56,7 @@ const userSchema = mongoose.Schema(
       },
       private: true, // used by the toJSON plugin
     },
-  },
+  },   
   {
     timestamps: true,
   }

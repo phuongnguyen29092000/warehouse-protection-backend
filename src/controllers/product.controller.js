@@ -19,25 +19,9 @@ const getAllProduct = catchAsync(async (req, res, next) => {
 });
 
 const createProduct = catchAsync(async (req, res, next) => {
-  if (
-    !req.files.imageSlide0 ||
-    !req.files.imageSlide1 ||
-    !req.files.imageSlide2 ||
-    !req.files.imageSlide3
-  ) {
-    return next(new ApiError("Please upload image!", 400));
-  }
-  const imageSlide0 = req.files.imageSlide0[0].path;
-  const imageSlide1 = req.files.imageSlide1[0].path;
-  const imageSlide2 = req.files.imageSlide2[0].path;
-  const imageSlide3 = req.files.imageSlide3[0].path;
-  const imageSlidesPath = [];
-  imageSlidesPath.push(imageSlide0);
-  imageSlidesPath.push(imageSlide1);
-  imageSlidesPath.push(imageSlide2);
-  imageSlidesPath.push(imageSlide3);
-  const createBody = Object.assign(req.body, { imageSlide: imageSlidesPath });
-  const product = await productService.createTour(createBody);
+  const image = req.file ? { imageUrl: req.file.path } : {}
+  const createBody = Object.assign(req.body, image);
+  const product = await productService.createProduct(createBody);
   if (!product)
     req.status(400).json({
       stautus: 400,
@@ -61,46 +45,10 @@ const deleteProduct = catchAsync(async (req, res, next) => {
 
 const updateProduct = catchAsync(async (req, res, next) => {
   const productDetail = await productService.getProductById(req.params.id);
-  let imageSlide0,
-    imageSlide1,
-    imageSlide2,
-    imageSlide3,
-    imageSlidesPath = [];
-  if (req.files) {
-    imageSlide0 = req.files.imageSlide0
-      ? req.files.imageSlide0[0].path
-      : productDetail.imageSlide[0];
-    imageSlide1 = req.files.imageSlide1
-      ? req.files.imageSlide1[0].path
-      : productDetail.imageSlide[0];
-    imageSlide2 = req.files.imageSlide2
-      ? req.files.imageSlide2[0].path
-      : productDetail.imageSlide[1];
-    imageSlide3 = req.files.imageSlide3
-      ? req.files.imageSlide3[0].path
-      : productDetail.imageSlide[2];
-    imageSlidesPath.push(imageSlide0);
-    imageSlidesPath.push(imageSlide1);
-    imageSlidesPath.push(imageSlide2);
-    imageSlidesPath.push(imageSlide3);
-  } else {
-    imageSlide0 = productDetail.imageSlide[0];
-    imageSlide1 = productDetail.imageSlide[0];
-    imageSlide2 = productDetail.imageSlide[1];
-    imageSlide3 = productDetail.imageSlide[2];
-    imageSlidesPath.push(imageSlide0);
-    imageSlidesPath.push(imageSlide1);
-    imageSlidesPath.push(imageSlide2);
-    imageSlidesPath.push(imageSlide3);
-  }
-  const updateBody = Object.assign(req.body, { imageSlide: imageSlidesPath });
-  delete updateBody["imageSlide0"];
-  delete updateBody["imageSlide1"];
-  delete updateBody["imageSlide2"];
-  delete updateBody["imageSlide3"];
-
-  const tour = await productService.updateProductById(req.params.id, updateBody);
-  if (!tour) res.status(400).json({
+  const image = req.file ? { imageUrl: req.file.path } : { imageUrl: productDetail.imageUrl}
+  const updateBody = Object.assign(req.body, image);
+  const product = await productService.updateProductById(req.params.id, updateBody);
+  if (!product) res.status(400).json({
     status: 400,
     message: 'Error update'
   })

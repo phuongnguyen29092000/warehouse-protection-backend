@@ -1,13 +1,14 @@
 const express = require("express");
 
 const { userController } = require("../controllers");
-const auth = require('../middlewares/auth')
+const auth = require('../middlewares/auth');
+const upLoadImage = require("../middlewares/imgUpload");
 
 const router = express.Router();
 
 router.get("/", userController.getAllUser);
 
-router.post("/create", userController.createUser);
+router.post("/create", upLoadImage.single('imageUrl'), userController.createUser);
 
 router.get("/:id",userController.getUserById);
 

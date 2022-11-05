@@ -6,11 +6,18 @@ const { emailBecomeOwner } = require("../config/emailTemplates");
 
 /* create new user */
 const createUser = catchAsync(async (req, res) => {
-  const user = await userService.createUser(req.body);
+  const image = req.file ? { photoUrl: req.file.path } : {}
+  const createBody = Object.assign(req.body, image);
+  const user = await userService.createUser(createBody);
 
+  if(!user) res.status(400).json({
+    status: 400,
+    message: "Error",
+  })
   res.status(httpStatus.CREATED).json({
     status: 201,
     message: "Create user successfully",
+    user: user
   });
 });
 
@@ -48,12 +55,12 @@ const getAllUser = catchAsync(async (req, res) => {
 
 /* update user detail by id */
 const updateUserById = catchAsync(async (req, res) => {
-  const user = await userService.updateUserById(req.params.id, req.body);
+  const newUser = await userService.updateUserById(req.params.id, req.body);
 
   res.status(httpStatus.OK).json({
     status: 200,
     message: "Update successfully!",
-    user: user,
+    user: newUser,
   });
 });
 

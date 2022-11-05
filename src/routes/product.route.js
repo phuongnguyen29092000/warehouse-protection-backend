@@ -5,6 +5,7 @@ const { productController } = require("../controllers");
 const auth = require("../middlewares/auth");
 
 const router = express.Router();
+const upLoadImage = require("../middlewares/imgUpload");
 
 router.get("/", productController.getAllProduct);
 
@@ -13,7 +14,7 @@ router.get(
   productController.getProductById
 );
 
-router.post("/create", productController.createProduct);
+router.post("/create", upLoadImage.single('imageUrl'), productController.createProduct);
 
 router.put("/:id", productController.updateProduct);
 

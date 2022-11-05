@@ -10,7 +10,7 @@ const cookieSession = require("cookie-session");
 // const ApiError = require("./utils/ApiError");
 // const globalErrorHandler = require("./controllers/error.controller");
 
-// const routes = require("./routes");
+const routes = require("./routes");
 const database = require("./config/database");
 database.connect();
 
@@ -33,9 +33,7 @@ app.use(
   cookieSession({ name: "session", keys: ["simple", "tourist"], maxAge: 10 })
 );
 
-app.use("/", ()=>{
-    console.log('get route here');
-});
+app.use('/', routes);
 
 app.all("*", (req, res, next) => {
   next(new ApiError(`Can't find ${req.originalUrl} on this server!`, 404));
