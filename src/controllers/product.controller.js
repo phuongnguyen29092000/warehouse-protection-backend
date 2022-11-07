@@ -5,7 +5,7 @@ const ApiError = require("../utils/ApiError");
 const getAllProduct = catchAsync(async (req, res, next) => {
   const prds = await productService.getAllProduct(req.query);
   if (!prds.length) {
-    req.json({
+    res.json({
       status: 404,
       message: "Not found",
     });
