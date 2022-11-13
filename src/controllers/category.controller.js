@@ -23,7 +23,7 @@ const getAllCategory = catchAsync(async (req, res) => {
     res.status(httpStatus.OK).json({
       status: 200,
       message: "OK",
-      categorys: categorys,
+      categories: categorys,
     });
 });
 

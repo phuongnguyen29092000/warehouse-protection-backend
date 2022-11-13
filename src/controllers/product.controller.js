@@ -4,6 +4,8 @@ const ApiError = require("../utils/ApiError");
 
 const getAllProduct = catchAsync(async (req, res, next) => {
   const prds = await productService.getAllProduct(req.query);
+  const count = (await productService.getTotalCountAllProduct(req.query))?.length
+  console.log(prds);
   if (!prds.length) {
     res.json({
       status: 404,
@@ -13,7 +15,10 @@ const getAllProduct = catchAsync(async (req, res, next) => {
     res.status(200).json({
       status: 200,
       message: "OK",
-      product: prds,
+      data: {
+        products: prds,
+        count: count
+      }
     });
   }
 });
