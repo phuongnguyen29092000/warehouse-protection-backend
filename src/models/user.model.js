@@ -9,6 +9,11 @@ const userSchema = mongoose.Schema(
       require: true,
       trim: true,
     },
+    walletAddress: {
+      type: String,
+      require: true,
+      trim: true,
+    },
     email: {
       type: String,
       required: [true, "Please provide your email"],

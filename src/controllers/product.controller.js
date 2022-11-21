@@ -1,6 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const { productService } = require("../services");
 const ApiError = require("../utils/ApiError");
+const httpStatus = require("http-status");
 
 const getAllProduct = catchAsync(async (req, res, next) => {
   const prds = await productService.getAllProduct(req.query);

@@ -1,26 +1,33 @@
 const mongoose = require("mongoose");
 
-const orderDetailSchema = mongoose.Schema(
+const orderSchema = mongoose.Schema(
   {
-    product: {
+    buyer: {
       type: mongoose.Schema.ObjectId,
-      ref: "Product",
+      ref: "User",
       required: true,
     },
-    order: {
+    seller: {
       type: mongoose.Schema.ObjectId,
-      ref: "Order",
+      ref: "User",
       required: true,
     },
-    price: {
+    totalPrice: {
       type: Number,
       required: true,
       min: 0,
     },
-    quantity: {
+    totalProduct: {
       type: Number,
       required: true,
       min: 0,
+    },
+    status: {
+      type: Boolean,
+      default: "PENDING",
+    },
+    note: {
+      type: String,
     },
   },
   {
@@ -28,6 +35,6 @@ const orderDetailSchema = mongoose.Schema(
   }
 );
 
-const OrderDetail = mongoose.model("OrderDetail", orderDetailSchema);
+const Order = mongoose.model("Order", orderSchema);
 
-module.exports = OrderDetail;
+module.exports = Order;

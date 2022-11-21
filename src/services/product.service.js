@@ -157,7 +157,7 @@ const getTotalCountAllProduct = async (queriesData) => {
 
 
 const getProductById = async (id) => {
-  return await Product.findById(id);
+  return await Product.findById(id).populate("user manufacturer subCategory");
 };
 
 const updateProductById = async (id, productBody) => {
