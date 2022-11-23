@@ -24,6 +24,26 @@ const getAllProduct = catchAsync(async (req, res, next) => {
   }
 });
 
+const getAllProductCompany = catchAsync(async (req, res, next) => {
+  const {products, totalCount} = await productService.getProductByCompany(req.params.id, req.query)
+  console.log(products);
+  if (!prds.length) {
+    res.json({
+      status: 404,
+      message: "Not found",
+    });
+  } else {
+    res.status(200).json({
+      status: 200,
+      message: "OK",
+      data: {
+        products: products,
+        count: totalCount
+      }
+    });
+  }
+});
+
 const createProduct = catchAsync(async (req, res, next) => {
   const image = req.file ? { imageUrl: req.file.path } : {}
   const createBody = Object.assign(req.body, image);
@@ -88,5 +108,6 @@ module.exports = {
   createProduct,
   deleteProduct,
   updateProduct,
-  getProductById
+  getProductById,
+  getAllProductCompany
 };

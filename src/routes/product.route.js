@@ -8,6 +8,7 @@ const router = express.Router();
 const upLoadImage = require("../middlewares/imgUpload");
 
 router.get("/", productController.getAllProduct);
+router.get("/company/:id", productController.getAllProductCompany);
 
 router.get(
   "/:id",

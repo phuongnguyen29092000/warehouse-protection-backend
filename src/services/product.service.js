@@ -89,9 +89,10 @@ const getAllProduct = async (queriesData) => {
         discount: { $gte: disValue[0], $lte: disValue[1] },
       },
     },
+    { $sort: { createdAt: -1 } },
   ])
     .skip(perPage * page - perPage)
-    .limit(perPage);
+    .limit(perPage)
 };
 
 const getTotalCountAllProduct = async (queriesData) => {
@@ -155,6 +156,14 @@ const getTotalCountAllProduct = async (queriesData) => {
   ])
 };
 
+const getProductByCompany = async(idCompany, queriesData) => {
+  const products = (await getAllProduct(queriesData))?.filter((product)=> queriesData.idCompany === product?.user._id.toString())
+  const totalCount = (await getTotalCountAllProduct(queriesData))?.filter((product)=> queriesData.idCompany === product?.user._id.toString())
+  return {
+    products,
+    totalCount: totalCount?.length
+  }
+}
 
 const getProductById = async (id) => {
   return await Product.findById(id).populate("user manufacturer subCategory");
@@ -179,5 +188,6 @@ module.exports = {
   getProductById,
   updateProductById,
   deleteProductById,
-  getTotalCountAllProduct
+  getTotalCountAllProduct,
+  getProductByCompany
 };

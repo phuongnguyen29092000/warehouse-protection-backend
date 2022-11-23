@@ -44,8 +44,21 @@ const userSchema = mongoose.Schema(
       trim: true,
     },
     address: {
-      type: String, 
-      require: true
+      value: {
+        type: String,
+      },
+      province: {
+        type: Number
+      },
+      district: {
+        type: Number
+      },
+      ward: {
+        type: Number
+      },
+      detail: {
+        type: String
+      }
     },
     password: {
       type: String,

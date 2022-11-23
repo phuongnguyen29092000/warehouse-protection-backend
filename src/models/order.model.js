@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const order_status = require('../config/order_status')
 
 const orderSchema = mongoose.Schema(
   {
@@ -23,8 +24,9 @@ const orderSchema = mongoose.Schema(
       min: 0,
     },
     status: {
-      type: Boolean,
-      default: "PENDING",
+      type: String,
+      default: order_status[0],
+      enum: order_status
     },
     note: {
       type: String,

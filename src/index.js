@@ -29,14 +29,11 @@ app.use(cors());
 app.options("*", cors());
 app.use(express.json());
 app.use(morgan("combined"));
-app.use(
-  cookieSession({ name: "session", keys: ["simple", "tourist"], maxAge: 10 })
-);
 
 app.use('/', routes);
 
 app.all("*", (req, res, next) => {
-  next(new ApiError(`Can't find ${req.originalUrl} on this server!`, 404));
+  next(new ApiError(`Can't find ${req.originalUrl} on this server!`,404));
 });
 
 // app.use(globalErrorHandler);
