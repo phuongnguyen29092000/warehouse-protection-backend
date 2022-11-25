@@ -3,6 +3,9 @@ const order_status = require('../config/order_status')
 
 const orderSchema = mongoose.Schema(
   {
+    walletAddress: {
+      type: String
+    },
     buyer: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
@@ -28,9 +31,17 @@ const orderSchema = mongoose.Schema(
       default: order_status[0],
       enum: order_status
     },
+    phoneNumber: {
+      type: String,
+      require: true
+    },
     note: {
       type: String,
     },
+    address: {
+      type: String,
+      require: true
+    }
   },
   {
     timestamps: true,

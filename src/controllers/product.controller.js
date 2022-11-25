@@ -6,7 +6,6 @@ const httpStatus = require("http-status");
 const getAllProduct = catchAsync(async (req, res, next) => {
   const prds = await productService.getAllProduct(req.query);
   const count = (await productService.getTotalCountAllProduct(req.query))?.length
-  console.log(prds);
   if (!prds.length) {
     res.json({
       status: 404,
@@ -26,8 +25,7 @@ const getAllProduct = catchAsync(async (req, res, next) => {
 
 const getAllProductCompany = catchAsync(async (req, res, next) => {
   const {products, totalCount} = await productService.getProductByCompany(req.params.id, req.query)
-  console.log(products);
-  if (!prds.length) {
+  if (!totalCount) {
     res.json({
       status: 404,
       message: "Not found",

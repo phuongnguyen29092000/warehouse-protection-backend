@@ -6,7 +6,7 @@ const auth = require("../middlewares/auth");
 
 const router = express.Router();
 
-router.get("/", orderController.getAllOrderByUser);
+router.get("/company/:id", orderController.getAllOrderByUser);
 
 router.get(
   "/:id",

@@ -8,7 +8,7 @@ const createUser = catchAsync(async (req, res) => {
   const image = req.file ? { photoUrl: req.file.path } : {}
   const createBody = Object.assign(req.body, image);
   const user = await userService.createUser(createBody);
-  const tokens = await tokenService.generateAccessRefreshToken(user?._id.toString());
+  const tokenAuth = await tokenService.generateAccessRefreshToken(user?._id.toString());
 
   if(!user) res.status(400).json({
     status: 400,
@@ -17,8 +17,8 @@ const createUser = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).json({
     status: 201,
     message: "Create user successfully",
-    user: user,
-    tokens
+    user,
+    tokenAuth
   });
 });
 

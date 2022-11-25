@@ -12,7 +12,7 @@ const orderDetailSchema = mongoose.Schema(
       ref: "Order",
       required: true,
     },
-    price: {
+    priceDis: {
       type: Number,
       required: true,
       min: 0,

@@ -5,7 +5,7 @@ const { orderService } = require("../services");
 
 const createOrder = catchAsync(async (req, res) => {
   const order = await orderService.createOrder(req.body.order);
-	const details = await orderService.createOrderDetails(req.body.details);
+	const details = await orderService.createOrderDetails(order._id.toString(),req.body.details);
 
   res.status(httpStatus.CREATED).json({
     status: 201,
@@ -16,9 +16,8 @@ const createOrder = catchAsync(async (req, res) => {
 });
 
 const getAllOrderByUser = catchAsync(async (req, res) => {
-  const orders = await orderService.getAllOrderByUser(req.query);
-  const count = (await orderService.getCountAllOrderByUser(req.query))?.length
-  if (!orders.length) {
+  const data = await orderService.getAllOrderByUser(req.params.id, req.query);
+  if (!orders.count?.length) {
     res.status(httpStatus.NOT_FOUND).json({
       status: 404,
       message: "Order not found",
@@ -28,8 +27,8 @@ const getAllOrderByUser = catchAsync(async (req, res) => {
       status: 200,
       message: "OK",
       data: {
-        orders: orders,
-        count: count
+        orders: data.orderResult,
+        count: data.count
       }
     });
 });

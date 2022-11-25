@@ -32,9 +32,9 @@ app.use(morgan("combined"));
 
 app.use('/', routes);
 
-app.all("*", (req, res, next) => {
-  next(new ApiError(`Can't find ${req.originalUrl} on this server!`,404));
-});
+// app.all("*", (req, res, next) => {
+//   next(new ApiError(`Can't find ${req.originalUrl} on this server!`,404));
+// });
 
 // app.use(globalErrorHandler);
 

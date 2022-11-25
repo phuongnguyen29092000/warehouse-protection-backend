@@ -22,7 +22,6 @@ const userSchema = mongoose.Schema(
     },
     photoUrl: {
       type: String,
-      require: true,
     },
     companyName: {
       type: String,

@@ -8,19 +8,23 @@ const createOrder = async(orderBody) => {
     return order
 }
 
-const createOrderDetails = async(details) => {
-	return details.forEach(async(detail) => {
-		const newRc = await OrderDetail.create(detail)
-		return newRc
-	})
+const createOrderDetails = async(orderId, details) => {
+  const newD = []
+  for (let index = 0; index < details.length; index++) {
+    const newRc = await OrderDetail.create({...details[index], order: orderId})
+    newD.push(newRc)
+  }
+	return newD
 }
 
-const getAllOrderByUser = async(queriesData) => {
-    return await Order.find()
-}
+const getAllOrderByUser = async(id,queriesData) => {
+  const page = parseInt(queriesData?.skip) || 1;
+  const perPage = parseInt(queriesData?.limit) || 12;
+  const searchKey = queriesData?.s || "";
+  const typeQuery = queriesData?.type || ""
 
-const getCountAllOrderByUser = async(queriesData) => {
-    return await Order.aggregate([
+  if(typeQuery === 'sales') {
+    const orderResult = await Order.aggregate([
         {
             $lookup: {
               from: "users",
@@ -39,17 +43,174 @@ const getCountAllOrderByUser = async(queriesData) => {
           },
           { $unwind: "$buyer" },
           { $unwind: "$seller" },
-
+  
           {
             $match: {
-              subCategory: {
-                $in: arrSubCate,
-              },
-              _id: { $regex: new RegExp(search, "i") },
+              buyer: new mongoose.Types.ObjectId(id),
+              _id: { $regex: new RegExp(searchKey, "i") },
             },
           },
     ]).skip(perPage * page - perPage)
     .limit(perPage);
+
+    const count = await Order.aggregate([
+      {
+          $lookup: {
+            from: "users",
+            localField: "buyer",
+            foreignField: "_id",
+            as: "buyer",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "seller",
+            foreignField: "_id",
+            as: "seller",
+          },
+        },
+        { $unwind: "$buyer" },
+        { $unwind: "$seller" },
+
+        {
+          $match: {
+            buyer: new mongoose.Types.ObjectId(id),
+            _id: { $regex: new RegExp(searchKey, "i") },
+          },
+        },
+      ])
+    return {
+      orderResult,
+      count: count?.length
+    }
+  }
+
+  if(typeQuery === 'purchase') {
+    const orderResult = await Order.aggregate([
+      {
+          $lookup: {
+            from: "users",
+            localField: "buyer",
+            foreignField: "_id",
+            as: "buyer",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "seller",
+            foreignField: "_id",
+            as: "seller",
+          },
+        },
+        { $unwind: "$buyer" },
+        { $unwind: "$seller" },
+
+        {
+          $match: {
+            seller: new mongoose.Types.ObjectId(id),
+            _id: { $regex: new RegExp(searchKey, "i") },
+          },
+        },
+    ])
+    const count = await Order.aggregate([
+      {
+          $lookup: {
+            from: "users",
+            localField: "buyer",
+            foreignField: "_id",
+            as: "buyer",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "seller",
+            foreignField: "_id",
+            as: "seller",
+          },
+        },
+        { $unwind: "$buyer" },
+        { $unwind: "$seller" },
+
+        {
+          $match: {
+            seller: new mongoose.Types.ObjectId(id),
+            _id: { $regex: new RegExp(searchKey, "i") },
+          },
+        },
+      ])
+    return {
+      orderResult,
+      count: count?.length
+    }
+  }
+
+  if(!typeQuery) {
+    const orderResult = (await Order.aggregate([
+      {
+          $lookup: {
+            from: "users",
+            localField: "buyer",
+            foreignField: "_id",
+            as: "buyer",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "seller",
+            foreignField: "_id",
+            as: "seller",
+          },
+        },
+        { $unwind: "$buyer" },
+        { $unwind: "$seller" },
+  
+        {
+          $match: {
+            _id: { $regex: new RegExp(searchKey, "i") },
+          },
+        },
+      ]).skip(perPage * page - perPage)
+      .limit(perPage))?.filter((order)=> {
+      return order.seller.toString() === id || order.buyer.toString() === id
+    })
+    const count = (await Order.aggregate([
+      {
+          $lookup: {
+            from: "users",
+            localField: "buyer",
+            foreignField: "_id",
+            as: "buyer",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "seller",
+            foreignField: "_id",
+            as: "seller",
+          },
+        },
+        { $unwind: "$buyer" },
+        { $unwind: "$seller" },
+  
+        {
+          $match: {
+            _id: { $regex: new RegExp(searchKey, "i") },
+          },
+        },
+      ]))?.filter((order)=> {
+      return order.seller.toString() === id || order.buyer.toString() === id
+    })
+    
+    return {
+      orderResult,
+      count: count?.length
+    }
+  }
 }
 
 const getOrderById = async(id) => {
@@ -76,10 +237,9 @@ const deleteOrderById = async(id) => {
 
 module.exports = {
     createOrder,
-    getAllOrderByUser,
-    getCountAllOrderByUser,
     getOrderById,
     updateOrderById,
     deleteOrderById,
-		createOrderDetails
+		createOrderDetails,
+    getAllOrderByUser
 }
