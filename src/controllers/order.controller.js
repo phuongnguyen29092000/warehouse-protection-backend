@@ -4,14 +4,12 @@ const { orderService } = require("../services");
 
 
 const createOrder = catchAsync(async (req, res) => {
-  const order = await orderService.createOrder(req.body.order);
-	const details = await orderService.createOrderDetails(order._id.toString(),req.body.details);
+  const order = await orderService.createOrder(req.body);
 
   res.status(httpStatus.CREATED).json({
     status: 201,
     message: "Create successfully",
     order: order,
-		details: details,
   });
 });
 

@@ -7,10 +7,13 @@ const upLoadImage = require("../middlewares/imgUpload");
 const router = express.Router();
 
 router.get("/", userController.getAllUser);
+router.get("/search", userController.getUserBySearchKey);
 
 router.post("/create", upLoadImage.single('imageUrl'), userController.createUser);
 
 router.get("/:id",userController.getUserById);
+
+router.get("/wallet/:id",userController.getUserByWallet);
 
 router.put("/:id", userController.updateUserById);
 

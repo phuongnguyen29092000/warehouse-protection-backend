@@ -27,6 +27,9 @@ const userSchema = mongoose.Schema(
       type: String,
       require: true,
     },
+    phoneNumber: {
+      type: String
+    },
     active: {
       type: Boolean,
       default: true,
@@ -73,6 +76,10 @@ const userSchema = mongoose.Schema(
       },
       private: true, // used by the toJSON plugin
     },
+    role: {
+      type: String,
+      default: 'user'
+    }
   },   
   {
     timestamps: true,

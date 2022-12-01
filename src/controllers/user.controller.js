@@ -22,9 +22,43 @@ const createUser = catchAsync(async (req, res) => {
   });
 });
 
+const createAdmin = catchAsync(async (req, res) => {
+  const image = req?.file ? { photoUrl: req.file.path } : {}
+  const createBody = Object.assign(req.body, image);
+  const admin = await userService.createAdmin(createBody);
+  const tokenAuth = await tokenService.generateAccessRefreshToken(admin?._id.toString());
+
+  if(!admin) res.status(400).json({
+    status: 400,
+    message: "Error",
+  })
+  res.status(httpStatus.CREATED).json({
+    status: 201,
+    message: "Create admin successfully",
+    admin,
+    tokenAuth
+  });
+});
+
 /* get user detail by id */
 const getUserById = catchAsync(async (req, res) => {
   const user = await userService.getUserById(req.params.id);
+
+  if (!user)
+    res.status(httpStatus.NOT_FOUND).json({
+      status: 404,
+      message: "Not found",
+    });
+  else
+    res.status(200).json({
+      status: 200,
+      message: "OK",
+      user: user,
+    });
+});
+
+const getUserByWallet = catchAsync(async (req, res) => {
+  const user = await userService.getUserByWallet(req.params.address);
 
   if (!user)
     res.status(httpStatus.NOT_FOUND).json({
@@ -89,11 +123,30 @@ const setActiveUser = catchAsync(async(req,res) =>{
     });
 })
 
+const getUserBySearchKey = catchAsync(async (req, res) => {
+  const users = await userService.searchByCompanyName(req.query.key)
+  if (!users.length)
+    res.status(httpStatus.NOT_FOUND).json({
+      status: 404,
+      message: "Users Not found",
+    });
+  else
+    res.status(200).json({
+      status: 200,
+      message: "OK",
+      users: users,
+    });
+});
+
+
 module.exports = {
   createUser,
   getUserById,
   updateUserById,
   deleteUserById,
   setActiveUser,
-  getAllUser
+  getAllUser,
+  getUserByWallet,
+  createAdmin,
+  getUserBySearchKey
 };

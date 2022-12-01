@@ -1,7 +1,7 @@
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 const nodeMailer = require("nodemailer");
-const { User } = require("../models");
+const { User, Admin } = require("../models");
 const mongoose = require("mongoose");
 
 const createUser = async (userBody) => {
@@ -15,8 +15,28 @@ const createUser = async (userBody) => {
   return user;
 };
 
+const createAdmin = async (userBody) => {
+  if (await Admin.isEmailTaken(userBody.email)) {
+    return null
+  }
+  const admin = await Admin.create(userBody);
+  return admin;
+};
+
+const getAdminByEmail = async (email) => {
+  return Admin.findOne({ email });
+};
+
+const getAdminById = async (id) => {
+  return Admin.findById(id);
+};
+
 const getUserById = async (id) => {
   return User.findById(id);
+};
+
+const getUserByWallet = async (address) => {
+  return User.findById({address});
 };
 
 const getUserByCode = async (code) => {
@@ -32,7 +52,6 @@ const getUserByEmail = async (email) => {
 };
 
 const updateUserById = async (userId, updateBody) => {
-  console.log(updateBody);
   const user = await getUserById(userId);
   if (!user)
     res.json({
@@ -71,6 +90,13 @@ const setActiveUser = async (id) => {
   return userUpdated;
 };
 
+const searchByCompanyName = async(searchKey) => {
+  searchKey = searchKey.trim()
+  return await User.find({
+    companyName: { $regex: searchKey, $options: "i" }
+  })
+}
+
 module.exports = {
   createUser,
   getUserById,
@@ -79,5 +105,10 @@ module.exports = {
   deleteUserById,
   setActiveUser,
   getAllUser,
-  getUserByCode
+  getUserByCode,
+  getUserByWallet,
+  createAdmin,
+  getAdminByEmail,
+  getAdminById,
+  searchByCompanyName
 };

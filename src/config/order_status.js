@@ -1,9 +1,8 @@
 const status = [
     'PENDING',
-    'DELIVERY',
-    'RECEIVE',
-    'PAID',
-    'ABORT'
+    'RETURN',
+    'SUCCESS',
+    'CANCEL'
 ]
 
 module.exports = status

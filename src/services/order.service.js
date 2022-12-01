@@ -1,20 +1,17 @@
-const httpStatus = require('http-status');
-const { Order, OrderDetail } = require('../models');
+
+const { Order } = require('../models');
 const ApiError = require('../utils/ApiError');
 const mongoose = require("mongoose");
+const { updateProductById, getProductById} = require('./product.service')
 
 const createOrder = async(orderBody) => {
-    const order = await Order.create(orderBody)
-    return order
-}
-
-const createOrderDetails = async(orderId, details) => {
-  const newD = []
-  for (let index = 0; index < details.length; index++) {
-    const newRc = await OrderDetail.create({...details[index], order: orderId})
-    newD.push(newRc)
+  const order = await Order.create(orderBody)
+  const details = order.details
+  for (let i = 0; i < details?.length; i++) {
+    const {amount} = await getProductById(details[i].product)
+    await updateProductById(details[i].product, {amount: amount - details[i].quantity})
   }
-	return newD
+  return order
 }
 
 const getAllOrderByUser = async(id,queriesData) => {
@@ -214,12 +211,7 @@ const getAllOrderByUser = async(id,queriesData) => {
 }
 
 const getOrderById = async(id) => {
-	const orderDetailPerOrder = await OrderDetail.find({order: new mongoose.Types.ObjectId(id),})
-  const orderDetail = await Order.findById(id)
-	return {
-		...orderDetail,
-		details: orderDetailPerOrder
-	}
+  return await Order.findById(id)
 }
 
 const updateOrderById = async(id, status) => {
@@ -240,6 +232,5 @@ module.exports = {
     getOrderById,
     updateOrderById,
     deleteOrderById,
-		createOrderDetails,
     getAllOrderByUser
 }

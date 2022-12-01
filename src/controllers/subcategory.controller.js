@@ -2,7 +2,6 @@ const catchAsync = require("../utils/catchAsync");
 const httpStatus = require("http-status");
 const { subCategoryService } = require("../services");
 
-/* create new type place */
 const createSubCategory = catchAsync(async (req, res) => {
   const subCategory = await subCategoryService.createSubCategory(req.body);
   res.status(httpStatus.CREATED).json({
@@ -11,7 +10,7 @@ const createSubCategory = catchAsync(async (req, res) => {
     subCategory: subCategory,
   });
 });
-/* get all type place */
+
 const getAllSubCategory = catchAsync(async (req, res) => {
   const subCategorys = await subCategoryService.getAllSubCategory();
   if (!subCategorys.length) {
@@ -42,7 +41,6 @@ const getSubCategoryByCategoryId = catchAsync(async (req, res) => {
     });
 });
 
-/* get SubCategory detail by params id */
 const getSubCategoryById = catchAsync(async (req, res) => {
   const subcategory = await subCategoryService.getSubCategoryById(req.params.id);
 
@@ -59,7 +57,6 @@ const getSubCategoryById = catchAsync(async (req, res) => {
     });
 });
 
-/* update type place detail by params id*/
 const updateSubCategorysById = catchAsync(async (req, res) => {
   const subCategory = await subCategoryService.updateSubCategoryById(
     req.params.id,
@@ -72,7 +69,6 @@ const updateSubCategorysById = catchAsync(async (req, res) => {
   });
 });
 
-/* delete type place by params id */
 const deleteSubCategoryById = catchAsync(async (req, res) => {
   await subCategoryService.deleteSubCategoryById(req.params.id);
   res.status(httpStatus.NO_CONTENT).json({
