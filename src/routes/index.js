@@ -7,6 +7,7 @@ const productRote = require('./product.route')
 const authRoute = require('./auth.route')
 const orderRoute = require('./order.route')
 const adminRoute = require('./admin.route')
+const feedbackRoute  = require('./feedback.route')
 const router = express.Router();
 
 const defaultRoutes = [
@@ -25,6 +26,10 @@ const defaultRoutes = [
   {
     path: "/order",
     route: orderRoute,
+  },
+  {
+    path: "/feedback",
+    route: feedbackRoute,
   },
   {
     path: "/auth",

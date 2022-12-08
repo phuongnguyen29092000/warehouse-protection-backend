@@ -17,7 +17,6 @@ const productSchema = mongoose.Schema(
     description: {
       type: String,
       minlength: 20,
-      maxlength: 1024,
       required: true,
     },
     imageUrl: {
@@ -29,9 +28,8 @@ const productSchema = mongoose.Schema(
       type: Number,
       required: true,
       min: 0,
-      max: 500000000,
     },
-    dateOfInventory: {
+    dateOfManufacture: {
       type: Date,
       required: true,
     },
@@ -72,10 +70,6 @@ const productSchema = mongoose.Schema(
     manufacturer : {
       type: mongoose.Schema.ObjectId,
       ref: "User",
-    },
-    slug: {
-      type: String,
-      slug: "productName",
     },
   },
   {

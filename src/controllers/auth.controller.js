@@ -4,15 +4,20 @@ const { userService, authService, tokenService } = require('../services');
 
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body);
   const user = await authService.loginUserWithEmailAndPassword(email, password);
-  const tokenAuth = await tokenService.generateAccessRefreshToken(user?._id.toString());
-  res.status(200).json({
-    status: 200,
-    message: 'ok',
-    user,
-    tokenAuth
+  if(!user) res.status(401).json({
+    status: 401,
+    message: 'error',
   })
+  else {
+    const tokenAuth = await tokenService.generateAccessRefreshToken(user?._id.toString());
+    res.status(200).json({
+      status: 200,
+      message: 'ok',
+      user,
+      tokenAuth
+    })
+  }
 });
 
 const logout = catchAsync(async (req, res) => {
@@ -29,6 +34,20 @@ const refreshTokens = catchAsync(async (req, res) => {
   });
 });
 
+const changePass = catchAsync(async(req, res) => {
+  const { oldpass, newpass, confirmpass, email } = req.body
+  const isAdmin = !!(await userService.getAdminByEmail(email))
+  const user = await authService.changePass(email, newpass, isAdmin)
+  if (!user) res.status(httpStatus.BAD_REQUEST).json({
+    status: 400,
+    message: "Lỗi Server. Vui lòng thử lại!"
+  })
+  res.status(200).json({
+    status: 200,
+    message: "Đổi mật khẩu thành công!"
+  })
+})
+
 // const forgotPassword = catchAsync(async (req, res) => {
 //   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
 //   await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
@@ -44,4 +63,5 @@ module.exports = {
   login,
   logout,
   refreshTokens,
+  changePass
 };

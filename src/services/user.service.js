@@ -70,6 +70,19 @@ const updateUserById = async (userId, updateBody) => {
   return user;
 };
 
+const updateAdminById = async (userId, updateBody) => {
+  const user = await getAdminById(userId);
+  if (!user)
+    res.json({
+      status: 404,
+      message: "User not found",
+    });
+  Object.assign(user, updateBody);
+  console.log(user);
+  await user.save();
+  return user;
+};
+
 const deleteUserById = async (userId) => {
   const user = await getUserById(userId);
   if (!user)  res.json({
@@ -110,5 +123,6 @@ module.exports = {
   createAdmin,
   getAdminByEmail,
   getAdminById,
-  searchByCompanyName
+  searchByCompanyName,
+  updateAdminById,
 };

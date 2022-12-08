@@ -14,7 +14,7 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   else if(admin && (await admin.isPasswordMatch(password))) {
     return admin
   } 
-  else throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect email or password");
+  else return null
 };
 
 const logout = async (accessToken, refreshToken) => {
@@ -50,6 +50,18 @@ const refreshAuth = async (refreshToken) => {
   }
 };
 
+const changePass = async(email, password, isAdmin = false) => {
+  let user
+  if(isAdmin) {
+    user = await userService.getAdminByEmail(email)
+  } else {
+    user = await userService.getUserByEmail(email)
+  }
+  Object.assign(user, { password })
+  await user.save()
+  return user
+}
+
 // const resetPassword = async (resetPasswordToken, newPassword) => {
 //   try {
 //     const resetPasswordTokenDoc = await tokenService.verifyToken(
@@ -71,5 +83,6 @@ module.exports = {
   loginUserWithEmailAndPassword,
   logout,
   refreshAuth,
+  changePass
   // resetPassword,
 };

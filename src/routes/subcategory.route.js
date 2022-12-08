@@ -14,10 +14,10 @@ router.get(
   subCategoryController.getSubCategoryById
 );
 
-router.post("/create", subCategoryController.createSubCategory);
+router.post("/create", auth('admin'), subCategoryController.createSubCategory);
 
-router.put("/:id", subCategoryController.updateSubCategorysById);
+router.put("/:id", auth('admin'), subCategoryController.updateSubCategorysById);
 
-router.delete("/:id", subCategoryController.deleteSubCategoryById);
+router.delete("/:id", auth('admin'), subCategoryController.deleteSubCategoryById);
 
 module.exports = router;

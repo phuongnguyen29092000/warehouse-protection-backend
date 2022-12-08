@@ -18,7 +18,7 @@ const getAllCategory = async () => {
     })
     .map((cat) => {
       const childs = subCategories.filter(
-        (sub) => sub.category.toString() === cat.parent._id.toString()
+        (sub) => sub.category._id.toString() === cat.parent._id.toString()
       );
       return {
         ...cat,

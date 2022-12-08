@@ -2,7 +2,6 @@ const catchAsync = require("../utils/catchAsync");
 const httpStatus = require("http-status");
 const { orderService } = require("../services");
 
-
 const createOrder = catchAsync(async (req, res) => {
   const order = await orderService.createOrder(req.body);
 
@@ -47,29 +46,24 @@ const getOrderById = catchAsync(async (req, res) => {
     });
 });
 
-const updatesStatusById = catchAsync(async (req, res) => {
-  const order = await orderService.updateOrderById(
-    req.params.id,
-    req.body.status
-  );
-  res.status(httpStatus.OK).json({
-    status: 200,
-    message: "OK",
-    order: order,
-  });
+const getOrderByAddress = catchAsync(async (req, res) => {
+  const order = await orderService.getOrderByAddress(req.params.address);
+  if (!order?.length) {
+    res.status(httpStatus.NOT_FOUND).json({
+      status: 404,
+      message: "Order not found",
+    });
+  } else
+    res.status(httpStatus.OK).json({
+      status: 200,
+      message: "OK",
+      order: order[0],
+    });
 });
 
-const deleteOrderById = catchAsync(async (req, res) => {
-  await orderService.deleteOrderById(req.params.id);
-  res.status(httpStatus.NO_CONTENT).json({
-    status: 204,
-    message: "Delete Ok",
-  });
-});
 module.exports = {
   createOrder,
   getAllOrderByUser,
   getOrderById,
-  updatesStatusById,
-  deleteOrderById,
+  getOrderByAddress
 };

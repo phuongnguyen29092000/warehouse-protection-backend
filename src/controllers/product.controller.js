@@ -26,7 +26,7 @@ const getAllProduct = catchAsync(async (req, res, next) => {
 const getAllProductCompany = catchAsync(async (req, res, next) => {
   const {products, totalCount} = await productService.getProductByCompany(req.params.id, req.query)
   if (!totalCount) {
-    res.json({
+    res.status(404).json({
       status: 404,
       message: "Not found",
     });

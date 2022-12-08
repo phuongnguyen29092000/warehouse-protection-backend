@@ -214,23 +214,23 @@ const getOrderById = async(id) => {
   return await Order.findById(id)
 }
 
-const updateOrderById = async(id, status) => {
-    const order = await getOrderById(id)
-    Object.assign(order, {status: status});
-    await order.save();
-    return order;
+const getOrderByAddress = async(address) => {
+  const data = await Order.find({walletAddress : address})
+  if(!data) return null
+  else return data[0]
 }
 
-const deleteOrderById = async(id) => {
+const updateOrderRatedById = async(id) => {
     const order = await getOrderById(id)
-    await order.remove()
-    return Order
+    Object.assign(order, {isRated: true});
+    await order.save();
+    return order;
 }
 
 module.exports = {
     createOrder,
     getOrderById,
-    updateOrderById,
-    deleteOrderById,
-    getAllOrderByUser
+    updateOrderRatedById,
+    getAllOrderByUser,
+    getOrderByAddress
 }

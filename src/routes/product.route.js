@@ -15,10 +15,10 @@ router.get(
   productController.getProductById
 );
 
-router.post("/create", upLoadImage.single('imageUrl'), productController.createProduct);
+router.post("/create", auth('user'), upLoadImage.single('imageUrl'), productController.createProduct);
 
-router.put("/:id", productController.updateProduct);
+router.put("/:id", auth('user'), productController.updateProduct);
 
-router.delete("/:id", productController.deleteProduct);
+router.delete("/:id", auth('user'), productController.deleteProduct);
 
 module.exports = router;

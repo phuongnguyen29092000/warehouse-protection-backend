@@ -13,10 +13,10 @@ router.get(
   categoryController.getCategoryById
 );
 
-router.post("/create", categoryController.createCategory);
+router.post("/create", auth('admin'), categoryController.createCategory);
 
-router.put("/:id", categoryController.updateCategorysById);
+router.put("/:id", auth('admin'),categoryController.updateCategorysById);
 
-router.delete("/:id", categoryController.deleteCategoryById);
+router.delete("/:id", auth('admin'), categoryController.deleteCategoryById);
 
 module.exports = router;

@@ -90,12 +90,26 @@ const getAllUser = catchAsync(async (req, res) => {
 
 /* update user detail by id */
 const updateUserById = catchAsync(async (req, res) => {
-  const newUser = await userService.updateUserById(req.params.id, req.body);
+  const image = req.file ? { photoUrl: req.file.path } : {}
+  const x = JSON.parse(req.body.address1)
+  console.log({x});
+  const newUser = await userService.updateUserById(req.params.id, Object.assign(Object.assign(req.body, {address: x}), image));
 
   res.status(httpStatus.OK).json({
     status: 200,
     message: "Update successfully!",
     user: newUser,
+  });
+});
+
+const updateAdminById = catchAsync(async (req, res) => {
+  const image = req.file ? { photoUrl: req.file.path } : {}
+  const user = await userService.updateAdminById(req.params.id, Object.assign(req.body, image));
+
+  res.status(httpStatus.OK).json({
+    status: 200,
+    message: "Update successfully!",
+    user,
   });
 });
 
@@ -138,7 +152,6 @@ const getUserBySearchKey = catchAsync(async (req, res) => {
     });
 });
 
-
 module.exports = {
   createUser,
   getUserById,
@@ -148,5 +161,6 @@ module.exports = {
   getAllUser,
   getUserByWallet,
   createAdmin,
-  getUserBySearchKey
+  getUserBySearchKey,
+  updateAdminById
 };

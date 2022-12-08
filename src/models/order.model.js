@@ -6,26 +6,6 @@ const orderSchema = mongoose.Schema(
     walletAddress: {
       type: String
     },
-    // buyer: {
-    //   type: mongoose.Schema.ObjectId,
-    //   ref: "User",
-    //   required: true,
-    // },
-    // seller: {
-    //   type: mongoose.Schema.ObjectId,
-    //   ref: "User",
-    //   required: true,
-    // },
-    // totalPrice: {
-    //   type: Number,
-    //   required: true,
-    //   min: 0,
-    // },
-    // totalProduct: {
-    //   type: Number,
-    //   required: true,
-    //   min: 0,
-    // },
     details: [{
       product: {
         type: mongoose.Schema.ObjectId,
@@ -53,6 +33,10 @@ const orderSchema = mongoose.Schema(
     address: {
       type: String,
       require: true
+    },
+    isRated: {
+      type: Boolean,
+      default: false
     }
   },
   {

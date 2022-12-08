@@ -8,7 +8,7 @@ const createSubCategory = async(cubcategoryBody) => {
 }
 
 const getAllSubCategory = async() => {
-    return await SubCategory.find()
+    return await SubCategory.find().populate('category')
 }
 const getSubCategoryByCategoryId = async(id) => {
     return await SubCategory.find({category: id.toString()})

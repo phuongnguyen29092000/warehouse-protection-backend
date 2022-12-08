@@ -6,17 +6,18 @@ const auth = require("../middlewares/auth");
 
 const router = express.Router();
 
-router.get("/company/:id", orderController.getAllOrderByUser);
+router.get("/company/:id", auth('user'), orderController.getAllOrderByUser);
 
 router.get(
-  "/:id",
+  "/:id", auth('user'),
   orderController.getOrderById
 );
 
-router.post("/create", orderController.createOrder);
+router.get(
+  "/wallet/:address", auth('user'),
+  orderController.getOrderByAddress
+);
 
-router.put("/:id", orderController.updatesStatusById);
-
-router.delete("/:id", orderController.deleteOrderById);
+router.post("/create", auth('user'), orderController.createOrder);
 
 module.exports = router;

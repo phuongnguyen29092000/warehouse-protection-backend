@@ -5,4 +5,5 @@ module.exports.SubCategory = require("./subcategory.model");
 module.exports.Product = require("./product.model");
 module.exports.Token = require("./token.model");
 module.exports.Order = require("./order.model");
+module.exports.Feedback = require("./feedback.model");
 
