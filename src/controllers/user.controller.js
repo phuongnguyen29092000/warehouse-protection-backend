@@ -92,7 +92,6 @@ const getAllUser = catchAsync(async (req, res) => {
 const updateUserById = catchAsync(async (req, res) => {
   const image = req.file ? { photoUrl: req.file.path } : {}
   const x = JSON.parse(req.body.address1)
-  console.log({x});
   const newUser = await userService.updateUserById(req.params.id, Object.assign(Object.assign(req.body, {address: x}), image));
 
   res.status(httpStatus.OK).json({

@@ -1,10 +1,4 @@
 const mongoose = require("mongoose");
-const slug = require("mongoose-slug-generator");
-
-const options = {
-  lang: "en",
-};
-mongoose.plugin(slug, options);
 
 const productSchema = mongoose.Schema(
   {

@@ -5,6 +5,7 @@ module.exports.productController = require("./product.controller");
 module.exports.authController = require("./auth.controller");
 module.exports.orderController = require("./order.controller");
 module.exports.feedbachController = require("./feedback.controller");
+module.exports.cartController = require("./cart.contoller");
 
 
 

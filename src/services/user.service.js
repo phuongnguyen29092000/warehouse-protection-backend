@@ -36,7 +36,7 @@ const getUserById = async (id) => {
 };
 
 const getUserByWallet = async (address) => {
-  return User.findById({address});
+  return (await User.find({walletAddress: address}))?.[0];
 };
 
 const getUserByCode = async (code) => {

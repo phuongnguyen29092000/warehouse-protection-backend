@@ -14,8 +14,8 @@ const auth = (...roles) => {
         }
         const accessTokenInfo = await Token.findOne({ token: token, type: tokenTypes.ACCESS })
         if(!accessTokenInfo) return res.status(httpStatus.FORBIDDEN).json({
-            status: 403,
-            message: "FORBIDDEN"
+            status: 401,
+            message: "Unauthorized"
         })
         try {
             req = req
@@ -25,14 +25,14 @@ const auth = (...roles) => {
             const admin = await userService.getAdminById(req.userId)
 
             if (!user && !admin) return res.status(httpStatus.FORBIDDEN).json({
-                status: 403,
+                status: 401,
                 message: "Invalid Token"
             })
             
             const curentAccount = user || admin
             if (!roles.includes(curentAccount.role)) return res.status(httpStatus.UNAUTHORIZED).json({
-                status: 401,
-                message: "Unauthoried"
+                status: 403,
+                message: "FORBIDDEN"
             })
             req.role = curentAccount.role
             req.userName = curentAccount.userName

@@ -13,8 +13,8 @@ router.get(
   orderController.getOrderById
 );
 
-router.get(
-  "/wallet/:address", auth('user'),
+router.post(
+  "/wallet/:address",
   orderController.getOrderByAddress
 );
 

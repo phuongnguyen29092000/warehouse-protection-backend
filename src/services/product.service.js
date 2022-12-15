@@ -43,7 +43,7 @@ const getAllProduct = async (queriesData) => {
   }
   if (queriesData?.cate) {
     listIdSubCate = (await subCategoryService.getAllSubCategory())
-      .filter((sub) => sub.category.toString() === queriesData.cate)
+      .filter((sub) => sub.category?._id.toString() === queriesData.cate)
       .map((sub) => sub._id);
   }
   const arrSubCate = queriesData?.subcate
@@ -295,6 +295,17 @@ const deleteProductById = async (id) => {
   return product;
 };
 
+const returnProductToSeller = async(orderDetail) => {
+  let count = 0
+  for (let i = 0; i < orderDetail?.details?.length; i++) {
+    const item =  orderDetail?.details?.[i];
+    const {amount} = await Product.findById(item?.product.toString())
+    await updateProductById(item?.product.toString(), {amount: amount + item.quantity})
+    count++
+  }
+  return count
+}
+
 module.exports = {
   createProduct,
   getAllProduct,
@@ -302,5 +313,6 @@ module.exports = {
   updateProductById,
   deleteProductById,
   getTotalCountAllProduct,
-  getProductByCompany
+  getProductByCompany,
+  returnProductToSeller
 };

@@ -17,6 +17,12 @@ router.get(
 
 router.post("/create", auth('user'), upLoadImage.single('imageUrl'), productController.createProduct);
 
+router.post("/create-multiple", auth('user'), productController.createProductWhenPayment);
+
+router.post("/create-multiple", productController.createProductWhenPayment);
+
+router.post("/return-product-seller", productController.returnProductToSeller);
+
 router.put("/:id", auth('user'), productController.updateProduct);
 
 router.delete("/:id", auth('user'), productController.deleteProduct);

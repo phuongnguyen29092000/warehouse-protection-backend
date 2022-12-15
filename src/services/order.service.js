@@ -2,7 +2,8 @@
 const { Order } = require('../models');
 const ApiError = require('../utils/ApiError');
 const mongoose = require("mongoose");
-const { updateProductById, getProductById} = require('./product.service')
+const { updateProductById, getProductById} = require('./product.service');
+const { userService } = require('.');
 
 const createOrder = async(orderBody) => {
   const order = await Order.create(orderBody)
@@ -214,10 +215,23 @@ const getOrderById = async(id) => {
   return await Order.findById(id)
 }
 
-const getOrderByAddress = async(address) => {
-  const data = await Order.find({walletAddress : address})
-  if(!data) return null
-  else return data[0]
+const getOrderByAddress = async(address, actors) => {
+  const {buyer, seller} = actors
+  const buyerInfo = await userService?.getUserByWallet(buyer)
+  const sellerInfo = await userService?.getUserByWallet(seller)
+  const data = await Order.find({walletAddress : address}).populate('details.product')
+  if(!data?.length) return null
+  else {
+    const details = []
+    const productTemp = data[0]
+    for (let index = 0; index < productTemp?.details.length; index++) {
+      const element = productTemp?.details?.[index];
+      details.push({...element?._doc, buyer: buyerInfo, seller: sellerInfo})
+    }
+    return {
+      ...productTemp?._doc, details: details
+    }
+  }
 }
 
 const updateOrderRatedById = async(id) => {

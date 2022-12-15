@@ -33,11 +33,6 @@ const feedbackSchema = mongoose.Schema(
   }
 );
 
-feedbackSchema.post("save", function () {
-  // this points to current review
-  this.constructor.calcAverageRatings(this.tour);
-});
-
 const Feedback = mongoose.model("Feedback", feedbackSchema);
 
 module.exports = Feedback;

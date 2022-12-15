@@ -47,8 +47,8 @@ const getOrderById = catchAsync(async (req, res) => {
 });
 
 const getOrderByAddress = catchAsync(async (req, res) => {
-  const order = await orderService.getOrderByAddress(req.params.address);
-  if (!order?.length) {
+  const order = await orderService.getOrderByAddress(req.params.address, req.body);
+  if (!Object.keys(order)?.length) {
     res.status(httpStatus.NOT_FOUND).json({
       status: 404,
       message: "Order not found",
@@ -57,7 +57,7 @@ const getOrderByAddress = catchAsync(async (req, res) => {
     res.status(httpStatus.OK).json({
       status: 200,
       message: "OK",
-      order: order[0],
+      order: order,
     });
 });
 

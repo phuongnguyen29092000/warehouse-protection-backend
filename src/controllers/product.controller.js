@@ -1,5 +1,6 @@
 const catchAsync = require("../utils/catchAsync");
-const { productService } = require("../services");
+const { productService, orderService } = require("../services");
+const { Product, Order} = require('../models')
 const ApiError = require("../utils/ApiError");
 const httpStatus = require("http-status");
 
@@ -59,6 +60,51 @@ const createProduct = catchAsync(async (req, res, next) => {
   }
 });
 
+const createProductWhenPayment = catchAsync(async(req, res, next) => {
+  const {buyerId, orderAddress} = req.body
+  const orderDetail = (await Order.find({walletAddress: orderAddress}))?.[0]
+  for (let i = 0; i < orderDetail?.details?.length; i++) {
+    const item =  orderDetail?.details?.[i];
+    const productDetail = await Product.findById(item?.product.toString())
+    const newProduct = {
+      productName: productDetail?.productName,
+      description: productDetail?.description,
+      imageUrl: productDetail?.imageUrl,
+      price: item?.priceDis,
+      warrantyPeriod: productDetail?.warrantyPeriod,   
+      amount: item?.quantity,
+      minimumQuantity: item?.quantity,
+      discount: 0,
+      isSelling: false,
+      subCategory: productDetail?.subCategory,
+      user: buyerId,
+      manufacturer: productDetail?.manufacturer, 
+      dateOfManufacture: productDetail?.dateOfManufacture
+    }
+    await productService.createProduct(newProduct)
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: 'ok',
+  });
+})
+
+const returnProductToSeller = catchAsync(async (req, res, next) => {
+  const {orderAddress} = req.body
+  const orderDetail = (await Order.find({walleAddress: orderAddress}))?.[0]
+  const countUpdated = await productService.returnProductToSeller(orderDetail)
+  if(countUpdated === orderDetail?.details?.length)
+  res.status(200).json({
+    status: 200,
+    message: "oke",
+  })
+  else res.status(400).json({
+    status: 400,
+    message: "error",
+  })
+});
+
 const deleteProduct = catchAsync(async (req, res, next) => {
   await productService.deleteProductById(req.params.id);
   res.status(httpStatus.NO_CONTENT).json({
@@ -107,5 +153,7 @@ module.exports = {
   deleteProduct,
   updateProduct,
   getProductById,
-  getAllProductCompany
+  getAllProductCompany,
+  createProductWhenPayment,
+  returnProductToSeller
 };
