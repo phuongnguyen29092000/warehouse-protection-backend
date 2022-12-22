@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { SubCategory, Category } = require('../models');
+const { SubCategory, Product } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 const createSubCategory = async(cubcategoryBody) => {
@@ -31,11 +31,18 @@ const deleteSubCategoryById = async(id) => {
     return subcategory
 }
 
+const checkExistSubCategoryProduct = async(id) =>{
+    const tours = await Product.find({subCategory: id})
+    return tours.length
+}
+
 module.exports = {
     createSubCategory,
     getAllSubCategory,
     getSubCategoryById,
     updateSubCategoryById,
     deleteSubCategoryById,
-    getSubCategoryByCategoryId
+    getSubCategoryByCategoryId,
+    getAllSubCategory,
+    checkExistSubCategoryProduct
 }

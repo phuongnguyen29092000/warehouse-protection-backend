@@ -59,11 +59,21 @@ const updateCategorysById = catchAsync(async (req, res) => {
 
 /* delete type place by params id */
 const deleteCategoryById = catchAsync(async (req, res) => {
-  await categoryService.deleteCategoryById(req.params.id);
-  res.status(httpStatus.NO_CONTENT).json({
-    status: 204,
-    message: "Delete Ok",
-  });
+  const isExistProduct = await categoryService.checkExistCategoryProduct(req.params.id)
+  if(isExistProduct > 0) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      status: 500,
+      length: isExistProduct,
+      message: `Không thể xóa danh mục này!`
+  })
+  } 
+  else {
+    await categoryService.deleteCategoryById(req.params.id);
+    res.status(httpStatus.NO_CONTENT).json({
+      status: 204,
+      message: "Delete Ok",
+    });
+  }
 });
 module.exports = {
   createCategory,

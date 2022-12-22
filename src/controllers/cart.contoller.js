@@ -27,6 +27,24 @@ const createOrUpdateCart = catchAsync(async (req, res) => {
   }
 });
 
+const updateCountItem = catchAsync(async (req, res) => {
+  const result = await cartService.updateCountItem(req.params.userId, req.body);
+  if(!result) {
+    res.status(httpStatus.BAD_REQUEST).json({
+      status: 400,
+      message: "Failed",
+    });
+  }
+  else {
+    const cartItem = await cartService.getCartByUser(req.params.userId);
+    res.status(httpStatus.OK).json({
+      status: 200,
+      message: "Update successfully",
+      cart: cartItem,
+    });
+  }
+});
+
 const getCartByUserId = catchAsync(async (req, res) => {
   const Cart = await cartService.getCartByUser(req.params.userId);
 
@@ -67,4 +85,5 @@ module.exports = {
   getCartByUserId,
   deleteItemCartById,
   deleteMultipleItemCartById,
+  updateCountItem
 };

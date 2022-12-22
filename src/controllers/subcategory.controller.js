@@ -70,11 +70,20 @@ const updateSubCategorysById = catchAsync(async (req, res) => {
 });
 
 const deleteSubCategoryById = catchAsync(async (req, res) => {
-  await subCategoryService.deleteSubCategoryById(req.params.id);
-  res.status(httpStatus.NO_CONTENT).json({
-    status: 204,
-    message: "Delete Ok",
-  });
+  const productExistSub = await subCategoryService.checkExistSubCategoryProduct(req.params.id)
+    if(productExistSub > 0){
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            status: 500,
+            length: productExistSub,
+            message: `Không thể xóa danh mục này!`
+        })
+    } else {
+      await subCategoryService.deleteSubCategoryById(req.params.id);
+      res.status(httpStatus.NO_CONTENT).json({
+        status: 204,
+        message: "Delete Ok",
+      });
+    }
 });
 module.exports = {
   createSubCategory,

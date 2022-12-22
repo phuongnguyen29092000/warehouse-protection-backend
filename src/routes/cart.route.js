@@ -11,9 +11,12 @@ router.post(
   cartController.createOrUpdateCart
 );
 
+router.put("/change-count/:userId", auth('user'), cartController.updateCountItem);
+
 router.get("/:userId", auth('user'), cartController.getCartByUserId);
 
 router.put("/:userId", auth('user'), cartController.deleteItemCartById);
+
 
 router.put("/multiple/:userId", auth('user'), cartController.deleteMultipleItemCartById);
 

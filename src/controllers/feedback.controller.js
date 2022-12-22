@@ -1,11 +1,12 @@
 //
 const catchAsync = require("../utils/catchAsync");
 const httpStatus = require("http-status");
-const { feedbackService, orderService } = require("../services");
+const { feedbackService, orderService, userService } = require("../services");
 
 const createFeedback = catchAsync(async (req, res) => {
 	await orderService.updateOrderRatedById(req.params.id)
   const feedback = await feedbackService.createFeedback(req.body);
+  if(feedback) await userService.updateRatingReputation(feedback?.seller, feedback.rating)
   res.status(httpStatus.CREATED).json({
     status: 201,
     message: "Create successfully",

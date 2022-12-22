@@ -25,6 +25,26 @@ const getCartByUser = async (user) => {
   }
 };
 
+const updateCountItem = async (user, body) => {
+  const { productId, newCount} = body
+  const cartItem = await getCartByUser(user);
+  if(!Object.keys(cartItem)?.length) return null
+  else {
+    const products = []
+    for (let index = 0; index < cartItem?.products.length; index++) {
+      const element = cartItem?.products?.[index];
+      if(element?.product._id.toString() === productId) products.push({...element, quantity: newCount})
+      else products.push({...element})
+    }
+    await Cart.findOneAndUpdate(
+      {user: user},
+      {products: products},
+      { new: true }
+    )
+    return true
+  }
+};
+
 const addItemCartById = async (userId, catBody) => {
   const products = (await getCartByUser(userId))?.products;
   products.push(catBody)
@@ -67,5 +87,6 @@ module.exports = {
   getCartByUser,
   addItemCartById,
   deleteItemCartById,
-  deleteMultipleItemCartById
+  deleteMultipleItemCartById,
+  updateCountItem
 };
