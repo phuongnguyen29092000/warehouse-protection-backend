@@ -12,7 +12,12 @@ const getFeedbackBySellerId = async(id) => {
     return await Feedback.find({seller: id.toString()})
 }
 
+const getFeedbackById = async(id) => {
+    return (await Feedback.find({order: id.toString()}))?.[0]
+}
+
 module.exports = {
     createFeedback,
-    getFeedbackBySellerId
+    getFeedbackBySellerId,
+    getFeedbackById
 }

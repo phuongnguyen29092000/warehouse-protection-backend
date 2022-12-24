@@ -30,7 +30,24 @@ const getFeedbackSellerId = catchAsync(async (req, res) => {
     });
 });
 
+const getFeedbackId = catchAsync(async (req, res) => {
+  const feedback = await feedbackService.getFeedbackById(req.params.id);
+
+  if (!feedback) {
+    res.status(httpStatus.NOT_FOUND).json({
+      status: 404,
+      message: "Feedback not found",
+    });
+  } else
+    res.status(httpStatus.OK).json({
+      status: 200,
+      message: "OK",
+      feedback: feedback,
+    });
+});
+
 module.exports = {
   createFeedback,
   getFeedbackSellerId,
+  getFeedbackId
 };

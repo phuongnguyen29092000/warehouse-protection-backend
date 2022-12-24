@@ -55,9 +55,23 @@ const generateAccessRefreshToken = async(id, isRefresh = false) => {
     }
 }
 
+const generateResetPasswordToken = async(email) => {
+    const company= await userService.getUserByEmail(email);
+    const admin = await userService.getAdminByEmail(email);
+    const user = admin || company
+    if (!user) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'No users found with this email');
+    }
+    const expires = moment().add(parseInt(process.env.RESET_PASSWORD_EXPIRATION_MINUTES), 'minutes');
+    const resetPasswordToken = generateToken(user._id, expires, tokenTypes.RESET_PASSWORD);
+    await saveToken(resetPasswordToken, user._id, expires, tokenTypes.RESET_PASSWORD);
+    return resetPasswordToken;
+};
+
 module.exports = {
     generateToken,
     saveToken,
     verifyToken,
     generateAccessRefreshToken,
+    generateResetPasswordToken
 }

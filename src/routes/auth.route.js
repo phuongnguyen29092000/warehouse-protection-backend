@@ -10,5 +10,7 @@ router.post("/login", authController.login)
 router.post("/logout", auth('admin', 'user'), authController.logout)
 router.post('/refresh-tokens', authController.refreshTokens);
 router.post('/changepass', auth('admin', 'user'), checkChangePass, authController.changePass)
+router.post('/forgot-password', authController.forgotPassword);
+router.post('/reset-password', authController.resetPassword);
 
 module.exports = router 

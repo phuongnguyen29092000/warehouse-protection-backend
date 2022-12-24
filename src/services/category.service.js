@@ -1,7 +1,7 @@
 const httpStatus = require("http-status");
 const { Category, SubCategory, Product} = require("../models");
 const ApiError = require("../utils/ApiError");
-const { getAllSubCategory } = require("./subcategory.service");
+const { getAllSubCategory, deleteSubCategoryById } = require("./subcategory.service");
 
 const createCategory = async (categoryBody) => {
   const category = await Category.create(categoryBody);
@@ -40,6 +40,12 @@ const updateCategoryById = async (id, catBody) => {
 
 const deleteCategoryById = async (id) => {
   const category = await getCategoryById(id);
+  const subCates = await SubCategory.find({category: id})
+  if(subCates?.length) {
+    for (let i = 0; i < subCates.length; i++) {
+      await deleteSubCategoryById(subCates[i]?._id)
+    }
+  }
   await category.remove();
   return category;
 };
@@ -49,8 +55,9 @@ const checkExistCategoryProduct = async(id) =>{
   const len = await SubCategory.find({category: id})
   for (let i = 0; i < len.length; i++) {
     const res = await Product.find({subCategory: len[i]?._id})
-    if(res?.length) i++ 
+    if(res?.length) ++i
   }
+  console.log({i});
   return i
 }
 

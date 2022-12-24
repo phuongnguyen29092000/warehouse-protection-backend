@@ -112,7 +112,7 @@ const searchByCompanyName = async(searchKey) => {
 
 const updateRatingReputation = async(userId, rating) => {
   const {ratingReputation} = await getUserById(userId)
-  const newRating = parseFloat((ratingReputation + rating)/2).toFixed(1)
+  const newRating = Number(parseFloat((ratingReputation + rating)/2).toFixed(1))
   await updateUserById(userId, {ratingReputation : newRating})
   return true
 }

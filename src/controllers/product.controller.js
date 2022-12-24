@@ -114,6 +114,7 @@ const deleteProduct = catchAsync(async (req, res, next) => {
 });
 
 const updateProduct = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   const productDetail = await productService.getProductById(req.params.id);
   const image = req.file ? { imageUrl: req.file.path } : { imageUrl: productDetail.imageUrl}
   const updateBody = Object.assign(req.body, image);

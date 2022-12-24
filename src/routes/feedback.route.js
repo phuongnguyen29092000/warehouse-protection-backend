@@ -14,4 +14,9 @@ router.get(
   feedbachController.getFeedbackSellerId
 );
 
+router.get(
+  "/:id",
+  feedbachController.getFeedbackId
+);
+
 module.exports = router;
