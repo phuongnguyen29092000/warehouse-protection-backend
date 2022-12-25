@@ -23,7 +23,7 @@ router.post("/create-multiple", productController.createProductWhenPayment);
 
 router.post("/return-product-seller", productController.returnProductToSeller);
 
-router.put("/:id", auth('user'), productController.updateProduct);
+router.put("/:id", auth('user'), upLoadImage.single('imageUrl'),  productController.updateProduct);
 
 router.delete("/:id", auth('user'), productController.deleteProduct);
 

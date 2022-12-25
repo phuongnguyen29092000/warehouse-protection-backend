@@ -56,7 +56,17 @@ const forgotPassword = catchAsync(async (req, res) => {
 });
 
 const resetPassword = catchAsync(async (req, res) => {
-  await authService.resetPassword(req.query.token, req.body.password);
+  const {password, confirmPassword} = req.body
+
+  if(!password || !confirmPassword) res.status(400).json({
+    status: 400,
+    message: 'Please type all fields'
+  })
+  if(password !== confirmPassword) res.status(400).json({
+    status: 400,
+    message: 'Confirm password not match'
+  })
+  await authService.resetPassword(req.query.token, password);
   res.status(httpStatus.OK).send();
 });
 
