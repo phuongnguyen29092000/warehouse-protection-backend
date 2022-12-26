@@ -92,7 +92,7 @@ const createProductWhenPayment = catchAsync(async(req, res, next) => {
 
 const returnProductToSeller = catchAsync(async (req, res, next) => {
   const {orderAddress} = req.body
-  const orderDetail = (await Order.find({walleAddress: orderAddress}))?.[0]
+  const orderDetail = (await Order.find({walletAddress: orderAddress}))?.[0]
   const countUpdated = await productService.returnProductToSeller(orderDetail)
   if(countUpdated === orderDetail?.details?.length)
   res.status(200).json({

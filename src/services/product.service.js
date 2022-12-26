@@ -284,8 +284,8 @@ const getProductById = async (id) => {
 
 const updateProductById = async (id, productBody) => {
   const product = await getProductById(id);
-  console.log(productBody);
   Object.assign(product, productBody);
+  console.log({product});
   await product.save();
   return product;
 };
